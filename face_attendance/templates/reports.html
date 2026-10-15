@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reports — NeuralPresence</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="app-body">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-brain"></i><span>Neural<b>Presence</b></span></div>
+    <nav class="sidebar-nav">
+      <a href="/dashboard" class="nav-item"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+      <a href="/attendance_page" class="nav-item"><i class="fas fa-camera"></i><span>Take Attendance</span></a>
+      <a href="/dashboard" class="nav-item"><i class="fas fa-user-plus"></i><span>Register Student</span></a>
+      <a href="/reports_page" class="nav-item active"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
+      <a href="/logout" class="nav-item logout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+    </nav>
+    <div class="sidebar-footer"><i class="fas fa-circle online"></i> System Online</div>
+  </aside>
+
+  <main class="main-content">
+    <header class="app-header">
+      <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+      <div class="header-title"><h1><i class="fas fa-chart-bar"></i> Attendance Reports</h1></div>
+      <div class="header-actions">
+        <button class="btn-sm" onclick="exportAllCSV()"><i class="fas fa-download"></i> Export All</button>
+        <div class="user-badge"><i class="fas fa-user-shield"></i> Admin</div>
+      </div>
+    </header>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label><i class="fas fa-calendar"></i> From</label>
+        <input type="date" id="fromDate"/>
+      </div>
+      <div class="filter-group">
+        <label><i class="fas fa-calendar-check"></i> To</label>
+        <input type="date" id="toDate"/>
+      </div>
+      <div class="filter-group">
+        <label><i class="fas fa-building"></i> Department</label>
+        <select id="filterDept">
+          <option value="">All Departments</option>
+          <option>Computer Science</option><option>Information Technology</option>
+          <option>Electronics</option><option>Mechanical</option>
+          <option>Civil Engineering</option><option>Business Administration</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="applyFilter()"><i class="fas fa-filter"></i> Apply Filter</button>
+      <button class="btn-outline" onclick="clearFilter()"><i class="fas fa-times"></i> Clear</button>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="report-summary">
+      <div class="rs-card"><i class="fas fa-calendar-check"></i><span id="rsTotalDays">—</span><p>Days Recorded</p></div>
+      <div class="rs-card"><i class="fas fa-users-check"></i><span id="rsTotalEntries">—</span><p>Total Entries</p></div>
+      <div class="rs-card"><i class="fas fa-percentage"></i><span id="rsAvgRate">—</span><p>Avg Attendance %</p></div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-header"><h3><i class="fas fa-chart-line"></i> Attendance Trend</h3></div>
+        <canvas id="trendChart" height="180"></canvas>
+      </div>
+      <div class="chart-card small">
+        <div class="chart-header"><h3><i class="fas fa-chart-pie"></i> By Department</h3></div>
+        <canvas id="deptChart" height="180"></canvas>
+      </div>
+    </div>
+
+    <!-- Full Attendance Table -->
+    <div class="table-card">
+      <div class="table-header">
+        <h3><i class="fas fa-table"></i> All Attendance Records</h3>
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" id="searchInput" placeholder="Search name or ID..." oninput="filterTable()"/>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table class="att-table" id="reportTable">
+          <thead><tr>
+            <th>#</th><th>Name</th><th>Student ID</th>
+            <th>Department</th><th>Date</th><th>Time</th>
+            <th>Confidence</th><th>Status</th>
+          </tr></thead>
+          <tbody id="reportBody"><tr><td colspan="8" class="loading-row"><i class="fas fa-circle-notch fa-spin"></i> Loading...</td></tr></tbody>
+        </table>
+      </div>
+      <div class="table-pagination" id="pagination"></div>
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/reports.js') }}"></script>
+</body>
+</html>

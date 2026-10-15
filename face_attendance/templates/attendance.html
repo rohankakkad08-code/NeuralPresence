@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Take Attendance — NeuralPresence</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="app-body">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-brain"></i><span>Neural<b>Presence</b></span></div>
+    <nav class="sidebar-nav">
+      <a href="/dashboard" class="nav-item"><i class="fas fa-th-large"></i><span>Dashboard</span></a>
+      <a href="/attendance_page" class="nav-item active"><i class="fas fa-camera"></i><span>Take Attendance</span></a>
+      <a href="/dashboard#register" class="nav-item"><i class="fas fa-user-plus"></i><span>Register Student</span></a>
+      <a href="/reports_page" class="nav-item"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
+      <a href="/logout" class="nav-item logout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+    </nav>
+    <div class="sidebar-footer"><i class="fas fa-circle online"></i> System Online</div>
+  </aside>
+
+  <main class="main-content">
+    <header class="app-header">
+      <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+      <div class="header-title"><h1><i class="fas fa-camera"></i> Take Attendance</h1></div>
+      <div class="header-actions">
+        <div class="user-badge"><i class="fas fa-user-shield"></i> Admin</div>
+      </div>
+    </header>
+
+    <div class="attendance-layout">
+      <!-- Camera Panel -->
+      <div class="camera-panel">
+        <div class="camera-card">
+          <div class="camera-header">
+            <h3><i class="fas fa-video"></i> Live Camera Feed</h3>
+            <div class="cam-status" id="camStatus">
+              <span class="dot red"></span> Camera Off
+            </div>
+          </div>
+          <div class="camera-view">
+            <video id="attendVideo" autoplay muted playsinline></video>
+            <canvas id="attendCanvas" style="display:none"></canvas>
+            <div class="cam-overlay" id="camOverlay">
+              <i class="fas fa-camera-slash"></i>
+              <p>Camera not started</p>
+              <button class="btn-primary" onclick="startAttendCam()"><i class="fas fa-camera"></i> Start Camera</button>
+            </div>
+            <div class="scan-overlay" id="scanOverlay" style="display:none">
+              <div class="scan-frame">
+                <div class="sf-corner tl"></div><div class="sf-corner tr"></div>
+                <div class="sf-corner bl"></div><div class="sf-corner br"></div>
+                <div class="sf-line"></div>
+              </div>
+              <div class="recognition-badge" id="recognitionBadge" style="display:none"></div>
+            </div>
+          </div>
+          <div class="camera-controls">
+            <button class="btn-primary" id="startBtn" onclick="startAttendCam()"><i class="fas fa-play"></i> Start Camera</button>
+            <button class="btn-success" id="autoScanBtn" onclick="toggleAutoScan()" style="display:none"><i class="fas fa-sync"></i> Auto Scan: OFF</button>
+            <button class="btn-outline" id="snapBtn" onclick="takeSnapshot()" style="display:none"><i class="fas fa-camera"></i> Scan Face</button>
+            <button class="btn-danger" id="stopBtn" onclick="stopCamera()" style="display:none"><i class="fas fa-stop"></i> Stop</button>
+          </div>
+        </div>
+
+        <!-- Result Panel -->
+        <div class="result-card" id="resultCard" style="display:none">
+          <div class="result-icon" id="resultIcon"></div>
+          <div class="result-info">
+            <h4 id="resultName"></h4>
+            <p id="resultDetails"></p>
+            <div class="confidence-bar">
+              <div class="conf-fill" id="confFill"></div>
+            </div>
+            <span id="confText" class="conf-text"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Today's Log -->
+      <div class="log-panel">
+        <div class="log-header">
+          <h3><i class="fas fa-clipboard-list"></i> Today's Log</h3>
+          <span class="log-count" id="logCount">0 checked in</span>
+        </div>
+        <div class="log-list" id="logList">
+          <div class="log-empty"><i class="fas fa-clock"></i><p>No attendance recorded yet today.</p></div>
+        </div>
+        <div class="log-footer">
+          <button class="btn-sm full-width" onclick="window.location.href='/reports_page'">
+            <i class="fas fa-chart-bar"></i> View Full Reports
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/attendance.js') }}"></script>
+</body>
+</html>
